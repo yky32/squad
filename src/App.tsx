@@ -5,6 +5,12 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { open } from "@tauri-apps/plugin-dialog";
 import GraphCanvas, { type Commit, type RepoView } from "./GraphCanvas";
 
+function folderName(path: string) {
+  const p = path.replace(/\/+$/, "");
+  const i = Math.max(p.lastIndexOf("/"), p.lastIndexOf("\\"));
+  return i >= 0 ? p.slice(i + 1) : p;
+}
+
 export default function App() {
   const [repo, setRepo] = useState<RepoView | null>(null);
   const [recents, setRecents] = useState<string[]>([]);
@@ -15,21 +21,28 @@ export default function App() {
     invoke<string[]>("recents_list").then(setRecents).catch(() => setRecents([]));
   }, []);
 
-  const loadPath = useCallback(async (path: string) => {
-    setError(null);
-    try {
-      const view = await invoke<RepoView>("open_path", { path });
-      setRepo(view);
-      setSelected(view.commits[0]?.id ?? null);
-      refreshRecents();
-    } catch (e) {
-      const msg = typeof e === "string" ? e : `Not a Git repository: ${path}`;
-      setError(msg);
-    }
-  }, [refreshRecents]);
+  const loadPath = useCallback(
+    async (path: string) => {
+      setError(null);
+      try {
+        const view = await invoke<RepoView>("open_path", { path });
+        setRepo(view);
+        setSelected(view.commits[0]?.id ?? null);
+        refreshRecents();
+      } catch (e) {
+        const msg = typeof e === "string" ? e : `Not a Git repository: ${path}`;
+        setError(msg);
+      }
+    },
+    [refreshRecents],
+  );
 
   const pick = useCallback(async () => {
-    const path = await open({ directory: true, multiple: false, title: "Open repository" });
+    const path = await open({
+      directory: true,
+      multiple: false,
+      title: "Open repository",
+    });
     if (typeof path === "string") await loadPath(path);
   }, [loadPath]);
 
@@ -64,11 +77,9 @@ export default function App() {
 
   if (!repo) {
     return (
-      <div
-        className="empty"
-        onDragOver={(e) => e.preventDefault()}
-      >
-        <h1>Squad</h1>
+      <div className="empty" onDragOver={(e) => e.preventDefault()}>
+        <p className="mark">Squad</p>
+        <p className="lede">Open a Git working directory on this Mac.</p>
         <button type="button" className="primary" onClick={() => void pick()}>
           Open repository…
         </button>
@@ -76,9 +87,16 @@ export default function App() {
         {error ? <p className="error">{error}</p> : null}
         {recents.length > 0 ? (
           <div className="recents">
+            <p className="recents-label">Recent</p>
             {recents.map((p) => (
-              <button key={p} type="button" className="recent" onClick={() => void loadPath(p)}>
-                {p}
+              <button
+                key={p}
+                type="button"
+                className="recent"
+                onClick={() => void loadPath(p)}
+              >
+                <span className="recent-name">{folderName(p)}</span>
+                <span className="recent-path">{p}</span>
               </button>
             ))}
           </div>
@@ -89,40 +107,46 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="stage">
-        <GraphCanvas
-          commits={repo.commits}
-          selected={selected}
-          onSelect={setSelected}
-        />
+      <header className="bar">
+        <span className="bar-name">{folderName(repo.path)}</span>
+        <span className="bar-count">{repo.commits.length} commits</span>
+        <button type="button" className="ghost" onClick={() => void pick()}>
+          Open…
+        </button>
+      </header>
+      <div className="body">
+        <div className="stage">
+          <GraphCanvas
+            commits={repo.commits}
+            selected={selected}
+            onSelect={setSelected}
+          />
+        </div>
+        <aside className="meta">
+          {commit ? <CommitMeta commit={commit} /> : <p className="hint">Select a commit.</p>}
+          {error ? <p className="error">{error}</p> : null}
+        </aside>
       </div>
-      <aside className="meta">
-        <div className="meta-path">{repo.path}</div>
-        {commit ? <CommitMeta commit={commit} /> : <p className="hint">Select a commit.</p>}
-        {error ? <p className="error">{error}</p> : null}
-      </aside>
     </div>
   );
 }
 
 function CommitMeta({ commit }: { commit: Commit }) {
+  const when = commit.date.replace("T", " ").replace(/\+\d{2}:\d{2}$/, "").slice(0, 19);
   return (
-    <dl>
-      <dt>Commit</dt>
-      <dd className="mono">{commit.id}</dd>
-      <dt>Author</dt>
-      <dd>
+    <div>
+      <h2 className="subject">{commit.subject || "(empty)"}</h2>
+      <p className="who">
         {commit.author}
-        {commit.email ? ` <${commit.email}>` : ""}
-      </dd>
-      <dt>Date</dt>
-      <dd>{commit.date}</dd>
-      <dt>Subject</dt>
-      <dd>{commit.subject}</dd>
-      <dt>Parents</dt>
-      <dd className="mono">
-        {commit.parents.length === 0 ? "(root)" : commit.parents.join("\n")}
-      </dd>
-    </dl>
+        {commit.email ? <span className="email"> {commit.email}</span> : null}
+      </p>
+      <p className="when">{when}</p>
+      <p className="hash">{commit.id}</p>
+      <p className="parents">
+        {commit.parents.length === 0
+          ? "root"
+          : commit.parents.map((p) => p.slice(0, 7)).join("  ")}
+      </p>
+    </div>
   );
 }

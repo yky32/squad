@@ -16,11 +16,11 @@ export type RepoView = {
   commits: Commit[];
 };
 
-const ROW = 28;
-const COL = 22;
-const PAD_X = 28;
-const PAD_Y = 20;
-const R = 5.5;
+const ROW = 36;
+const COL = 18;
+const PAD_X = 22;
+const PAD_Y = 18;
+const R = 5;
 
 type Props = {
   commits: Commit[];
@@ -50,6 +50,13 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
   const byIdRef = useRef(byId);
   byIdRef.current = byId;
 
+  const maxLane = useMemo(
+    () => commits.reduce((m, c) => Math.max(m, c.lane), 0),
+    [commits],
+  );
+  const maxLaneRef = useRef(maxLane);
+  maxLaneRef.current = maxLane;
+
   const draw = useCallback(() => {
     const canvas = ref.current;
     if (!canvas) return;
@@ -58,7 +65,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
     const dpr = window.devicePixelRatio || 1;
     const { w, h } = size.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#141414";
+    ctx.fillStyle = "#111317";
     ctx.fillRect(0, 0, w, h);
 
     const { x: cx, y: cy, scale } = cam.current;
@@ -67,12 +74,17 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
 
     const rowH = ROW * scale;
     const first = Math.max(0, Math.floor((-cy - PAD_Y * scale) / rowH) - 1);
-    const last = Math.min(list.length - 1, Math.ceil((-cy + h + PAD_Y * scale) / rowH) + 1);
+    const last = Math.min(
+      list.length - 1,
+      Math.ceil((-cy + h + PAD_Y * scale) / rowH) + 1,
+    );
     const map = byIdRef.current;
     const sel = selectedRef.current;
+    const textX =
+      PAD_X + (maxLaneRef.current + 1) * COL * scale + 16 * scale + cx;
 
-    ctx.lineWidth = Math.max(1, 1.25 * scale);
-    ctx.strokeStyle = "#5c5c5c";
+    ctx.lineWidth = Math.max(1, 1.15 * scale);
+    ctx.strokeStyle = "#3a4250";
     for (let i = first; i <= last; i++) {
       const c = list[i];
       if (!c) continue;
@@ -83,8 +95,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
         if (!p) continue;
         const px = PAD_X + p.lane * COL * scale + cx;
         const py = PAD_Y + p.row * ROW * scale + cy;
-        if (py < -40 && y < -40) continue;
-        if (py > h + 40 && y > h + 40) continue;
+        if ((py < -48 && y < -48) || (py > h + 48 && y > h + 48)) continue;
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.bezierCurveTo(x, (y + py) / 2, px, (y + py) / 2, px, py);
@@ -92,20 +103,33 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
       }
     }
 
+    const fontMain = `${Math.max(11, 12.5 * scale)}px -apple-system, BlinkMacSystemFont, sans-serif`;
+    const fontMeta = `${Math.max(10, 11 * scale)}px ui-monospace, Menlo, monospace`;
+
     for (let i = first; i <= last; i++) {
       const c = list[i];
       if (!c) continue;
       const x = PAD_X + c.lane * COL * scale + cx;
       const y = PAD_Y + c.row * ROW * scale + cy;
+      const on = c.id === sel;
+      if (on) {
+        ctx.fillStyle = "rgba(255,255,255,0.06)";
+        ctx.fillRect(0, y - 14 * scale, w, 28 * scale);
+      }
       ctx.beginPath();
       ctx.arc(x, y, R * scale, 0, Math.PI * 2);
-      ctx.fillStyle = c.id === sel ? "#f4f1ea" : "#d4a017";
+      ctx.fillStyle = on ? "#fff" : "#7eb0ff";
       ctx.fill();
-      if (c.id === sel) {
-        ctx.strokeStyle = "#d4a017";
-        ctx.lineWidth = Math.max(1, 1.5 * scale);
-        ctx.stroke();
-      }
+
+      ctx.textBaseline = "middle";
+      ctx.font = fontMain;
+      ctx.fillStyle = on ? "#f4f4f5" : "#c8cdd6";
+      const subj = c.subject.length > 72 ? `${c.subject.slice(0, 71)}…` : c.subject;
+      ctx.fillText(subj || "(empty)", textX, y - 1);
+      ctx.font = fontMeta;
+      ctx.fillStyle = "#8b929e";
+      const meta = `${c.id.slice(0, 7)}  ${c.author}`;
+      ctx.fillText(meta, textX, y + 12 * scale);
     }
   }, []);
 
@@ -137,25 +161,12 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
     return y / (ROW * cam.current.scale);
   }
 
-  function hit(clientX: number, clientY: number): string | null {
-    const rect = ref.current!.getBoundingClientRect();
-    const lx = clientX - rect.left;
-    const ly = clientY - rect.top;
-    const { x: cx, y: cy, scale } = cam.current;
+  function hit(clientY: number): string | null {
     const list = commitsRef.current;
     const row = worldRow(clientY);
-    const lo = Math.max(0, Math.floor(row) - 2);
-    const hi = Math.min(list.length - 1, Math.ceil(row) + 2);
-    const rad = (R + 4) * scale;
-    for (let i = lo; i <= hi; i++) {
-      const c = list[i];
-      const x = PAD_X + c.lane * COL * scale + cx;
-      const y = PAD_Y + c.row * ROW * scale + cy;
-      const dx = lx - x;
-      const dy = ly - y;
-      if (dx * dx + dy * dy <= rad * rad) return c.id;
-    }
-    return null;
+    const i = Math.round(row);
+    if (i < 0 || i >= list.length) return null;
+    return list[i]?.id ?? null;
   }
 
   return (
@@ -182,14 +193,16 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
           const moved =
             Math.abs(e.clientX - start.x) + Math.abs(e.clientY - start.y);
           if (moved < 4) {
-            const id = hit(e.clientX, e.clientY);
+            const id = hit(e.clientY);
             if (id) onSelectRef.current(id);
           }
         }}
         onWheel={(e) => {
           e.preventDefault();
-          const next = Math.min(2.4, Math.max(0.45, cam.current.scale * (e.deltaY < 0 ? 1.08 : 0.92)));
-          cam.current.scale = next;
+          cam.current.scale = Math.min(
+            2.2,
+            Math.max(0.55, cam.current.scale * (e.deltaY < 0 ? 1.06 : 0.94)),
+          );
           draw();
         }}
       />
