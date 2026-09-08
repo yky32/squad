@@ -1,7 +1,7 @@
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1c1c1e;
-  background: #f6f5f3;
+  color: #1f2328;
+  background: #ffffff;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -26,61 +26,67 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: 64px 24px 80px;
+}
+
+.mark-svg {
+  display: block;
+  margin-bottom: 20px;
 }
 
 .mark {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .lede {
-  margin: 8px 0 20px;
-  color: #6e6e73;
-  font-size: 13px;
+  margin: 12px 0 28px;
+  color: #656d76;
+  font-size: 16px;
 }
 
 .primary {
-  background: #1c1c1e;
-  color: #f6f5f3;
+  background: #1f883d;
+  color: #fff;
   border: 0;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 10px 18px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .primary:hover {
-  background: #000;
+  background: #1a7f37;
 }
 
 .hint {
-  color: #8e8e93;
-  margin: 12px 0 0;
-  font-size: 12px;
+  color: #656d76;
+  margin: 14px 0 0;
+  font-size: 13px;
 }
 
 .error {
-  color: #c41e3a;
-  margin: 12px 0 0;
-  font-size: 12px;
+  color: #d1242f;
+  margin: 14px 0 0;
+  font-size: 13px;
   max-width: 420px;
   text-align: center;
 }
 
 .recents {
-  margin-top: 36px;
-  width: min(400px, 100%);
+  margin-top: 48px;
+  width: min(420px, 100%);
 }
 
 .recents-label {
-  margin: 0 0 8px;
-  font-size: 11px;
-  color: #8e8e93;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #656d76;
+  font-weight: 600;
 }
 
 .recent {
@@ -90,26 +96,27 @@ button {
   gap: 2px;
   width: 100%;
   text-align: left;
-  background: #fff;
-  border: 1px solid #e6e4e0;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
   border-radius: 8px;
   padding: 10px 12px;
   cursor: pointer;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .recent:hover {
-  border-color: #cfcbc4;
+  background: #fff;
+  border-color: #1f883d;
 }
 
 .recent-name {
-  font-size: 13px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .recent-path {
-  font-size: 11px;
-  color: #8e8e93;
+  font-size: 12px;
+  color: #656d76;
   word-break: break-all;
 }
 
@@ -123,29 +130,30 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 40px;
-  padding: 0 12px;
-  border-bottom: 1px solid #e6e4e0;
-  background: #f6f5f3;
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid #d0d7de;
+  background: #fff;
 }
 
 .bar-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .bar-count {
-  font-size: 12px;
-  color: #8e8e93;
+  font-size: 13px;
+  color: #656d76;
   flex: 1;
 }
 
 .ghost {
-  background: transparent;
-  border: 1px solid #d8d4ce;
-  border-radius: 7px;
-  padding: 4px 10px;
-  font-size: 12px;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -158,7 +166,7 @@ button {
 .stage {
   flex: 1;
   min-width: 0;
-  background: #111317;
+  background: #fff;
 }
 
 .graph-wrap,
@@ -171,16 +179,16 @@ button {
 .meta {
   width: 300px;
   flex-shrink: 0;
-  border-left: 1px solid #e6e4e0;
-  padding: 18px 16px;
+  border-left: 1px solid #d0d7de;
+  padding: 20px 16px;
   overflow: auto;
-  background: #f6f5f3;
+  background: #f6f8fa;
 }
 
 .subject {
   margin: 0 0 10px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 650;
   line-height: 1.35;
 }
 
@@ -195,7 +203,7 @@ button {
 .parents {
   margin: 6px 0 0;
   font-size: 12px;
-  color: #6e6e73;
+  color: #656d76;
   word-break: break-all;
 }
 

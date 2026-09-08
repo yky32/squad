@@ -4,6 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { open } from "@tauri-apps/plugin-dialog";
 import GraphCanvas, { type Commit, type RepoView } from "./GraphCanvas";
+import Mark from "./Mark";
 
 function folderName(path: string) {
   const p = path.replace(/\/+$/, "");
@@ -78,8 +79,9 @@ export default function App() {
   if (!repo) {
     return (
       <div className="empty" onDragOver={(e) => e.preventDefault()}>
-        <p className="mark">Squad</p>
-        <p className="lede">Open a Git working directory on this Mac.</p>
+        <Mark size={64} />
+        <h1 className="mark">Squad</h1>
+        <p className="lede">See the commit graph of a folder on this Mac.</p>
         <button type="button" className="primary" onClick={() => void pick()}>
           Open repository…
         </button>

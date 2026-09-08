@@ -65,7 +65,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
     const dpr = window.devicePixelRatio || 1;
     const { w, h } = size.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#111317";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
     const { x: cx, y: cy, scale } = cam.current;
@@ -84,7 +84,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
       PAD_X + (maxLaneRef.current + 1) * COL * scale + 16 * scale + cx;
 
     ctx.lineWidth = Math.max(1, 1.15 * scale);
-    ctx.strokeStyle = "#3a4250";
+    ctx.strokeStyle = "#d0d7de";
     for (let i = first; i <= last; i++) {
       const c = list[i];
       if (!c) continue;
@@ -113,21 +113,21 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
       const y = PAD_Y + c.row * ROW * scale + cy;
       const on = c.id === sel;
       if (on) {
-        ctx.fillStyle = "rgba(255,255,255,0.06)";
-        ctx.fillRect(0, y - 14 * scale, w, 28 * scale);
+        ctx.fillStyle = "#ddf4ff";
+        ctx.fillRect(0, y - 16 * scale, w, 32 * scale);
       }
       ctx.beginPath();
       ctx.arc(x, y, R * scale, 0, Math.PI * 2);
-      ctx.fillStyle = on ? "#fff" : "#7eb0ff";
+      ctx.fillStyle = on ? "#0969da" : "#1f883d";
       ctx.fill();
 
       ctx.textBaseline = "middle";
       ctx.font = fontMain;
-      ctx.fillStyle = on ? "#f4f4f5" : "#c8cdd6";
+      ctx.fillStyle = on ? "#1f2328" : "#1f2328";
       const subj = c.subject.length > 72 ? `${c.subject.slice(0, 71)}…` : c.subject;
       ctx.fillText(subj || "(empty)", textX, y - 1);
       ctx.font = fontMeta;
-      ctx.fillStyle = "#8b929e";
+      ctx.fillStyle = "#656d76";
       const meta = `${c.id.slice(0, 7)}  ${c.author}`;
       ctx.fillText(meta, textX, y + 12 * scale);
     }
