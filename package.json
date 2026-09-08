@@ -1,0 +1,27 @@
+{
+  "name": "git-squad",
+  "version": "0.1.0",
+  "description": "See a git repo as a squad — who writes what, and where the bus factor is 1.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "squad": "./bin/squad.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yky32/squad.git"
+  },
+  "keywords": [
+    "git",
+    "visualize",
+    "contributors",
+    "bus-factor",
+    "cli"
+  ]
+}
