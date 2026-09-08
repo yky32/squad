@@ -1,27 +1,28 @@
 {
-  "name": "git-squad",
+  "name": "squad-gitviz",
+  "private": true,
   "version": "0.1.0",
-  "description": "See a git repo as a squad — who writes what, and where the bus factor is 1.",
-  "license": "MIT",
+  "description": "Squad — local desktop Git visualizer",
+  "license": "MIT OR Apache-2.0",
   "type": "module",
-  "bin": {
-    "squad": "./bin/squad.mjs"
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
   },
-  "engines": {
-    "node": ">=18"
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2"
   },
-  "files": [
-    "bin"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yky32/squad.git"
-  },
-  "keywords": [
-    "git",
-    "visualize",
-    "contributors",
-    "bus-factor",
-    "cli"
-  ]
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16",
+    "@tauri-apps/cli": "^2"
+  }
 }

@@ -1,46 +1,28 @@
-# squad
+# Squad
 
-See a git repo as a **squad** — who writes what, and which files are one-person deep.
+Local desktop Git visualizer. Open a working directory on disk. Reads `.git`. Draws the commit graph. Offline. Nothing is uploaded.
 
-Not a branch graph. Not a commit replay. Local `git log` only. No GitHub token.
-
-```
-squad  recordo
-12 people · 1840 commits · 910 files
-
-Wayne Yu               ██████████████████████  412  +81002 −12011  1d ago
-…
-
-bus factor 1  (one person ≥80% of churn, ≥40 lines)
-  lib/features/home/park_map.dart                 94%  Wayne Yu
-```
+**Window title:** Squad  
+**Identifier:** `com.squad.gitviz`  
+**License:** MIT OR Apache-2.0
 
 ## Run
 
-Node 18+. Inside any git repo:
+Rust 1.85+ (this repo builds on 1.98). Node 18+.
 
 ```bash
-npx --yes github:yky32/squad
+cd squad
+npm install
+export PATH="$HOME/.cargo/bin:$PATH"
+npm run tauri dev
 ```
 
-or
+Empty screen: **Open repository…** or drop a project folder. File menu: Open…, Open Recent, Clear Recents.
 
-```bash
-git clone https://github.com/yky32/squad
-cd your-other-repo
-node /path/to/squad/bin/squad.mjs
-```
+## Not in v0
 
-## Why
+Checkout, merge, GitHub, clone-from-URL, blame, diff editor, telemetry.
 
-`git log --graph` shows branches. GitHub shows a green calendar. Neither answers: *if this person leaves, which files die?*
+## Stack
 
-## Not for you
-
-- Pretty branch topology → `git-graph` / `tig`
-- Typing replay of diffs → `gitlogue`
-- Star charts → GitHub
-
-## License
-
-MIT
+Tauri 2 · Rust · React · TypeScript · Vite · Canvas 2D graph · `git` CLI only.
