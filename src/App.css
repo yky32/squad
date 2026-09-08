@@ -1,7 +1,14 @@
 :root {
+  --ink: #1c1916;
+  --paper: #f3efe8;
+  --paper-2: #faf8f4;
+  --muted: #7a746c;
+  --line: #e6e0d6;
+  --copper: #c45c26;
+  --copper-soft: #f3e6d4;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1f2328;
-  background: #ffffff;
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -26,67 +33,71 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 64px 24px 80px;
+  padding: 72px 24px 96px;
 }
 
 .mark-svg {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .mark {
   margin: 0;
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+  font-size: 44px;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 1;
 }
 
 .lede {
-  margin: 12px 0 28px;
-  color: #656d76;
+  margin: 14px 0 32px;
+  color: var(--muted);
   font-size: 16px;
+  max-width: 28rem;
+  text-align: center;
+  line-height: 1.45;
 }
 
 .primary {
-  background: #1f883d;
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   border: 0;
-  border-radius: 8px;
-  padding: 10px 18px;
+  border-radius: 10px;
+  padding: 11px 20px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
 }
 
 .primary:hover {
-  background: #1a7f37;
+  background: #000;
 }
 
 .hint {
-  color: #656d76;
-  margin: 14px 0 0;
+  color: var(--muted);
+  margin: 16px 0 0;
   font-size: 13px;
 }
 
 .error {
-  color: #d1242f;
-  margin: 14px 0 0;
+  color: #9b2c1c;
+  margin: 16px 0 0;
   font-size: 13px;
   max-width: 420px;
   text-align: center;
 }
 
 .recents {
-  margin-top: 48px;
-  width: min(420px, 100%);
+  margin-top: 56px;
+  width: min(400px, 100%);
 }
 
 .recents-label {
   margin: 0 0 10px;
-  font-size: 12px;
-  color: #656d76;
-  font-weight: 600;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .recent {
@@ -96,17 +107,16 @@ button {
   gap: 2px;
   width: 100%;
   text-align: left;
-  background: #f6f8fa;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 13px;
   cursor: pointer;
   margin-bottom: 8px;
 }
 
 .recent:hover {
-  background: #fff;
-  border-color: #1f883d;
+  border-color: var(--ink);
 }
 
 .recent-name {
@@ -116,7 +126,7 @@ button {
 
 .recent-path {
   font-size: 12px;
-  color: #656d76;
+  color: var(--muted);
   word-break: break-all;
 }
 
@@ -131,25 +141,25 @@ button {
   align-items: center;
   gap: 10px;
   height: 48px;
-  padding: 0 16px;
-  border-bottom: 1px solid #d0d7de;
-  background: #fff;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
 }
 
 .bar-name {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .bar-count {
   font-size: 13px;
-  color: #656d76;
+  color: var(--muted);
   flex: 1;
 }
 
 .ghost {
-  background: #f6f8fa;
-  border: 1px solid #d0d7de;
+  background: transparent;
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 5px 12px;
   font-size: 13px;
@@ -166,7 +176,7 @@ button {
 .stage {
   flex: 1;
   min-width: 0;
-  background: #fff;
+  background: var(--paper-2);
 }
 
 .graph-wrap,
@@ -179,17 +189,18 @@ button {
 .meta {
   width: 300px;
   flex-shrink: 0;
-  border-left: 1px solid #d0d7de;
-  padding: 20px 16px;
+  border-left: 1px solid var(--line);
+  padding: 22px 18px;
   overflow: auto;
-  background: #f6f8fa;
+  background: var(--paper);
 }
 
 .subject {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: 16px;
   font-weight: 650;
   line-height: 1.35;
+  letter-spacing: -0.02em;
 }
 
 .who {
@@ -203,7 +214,7 @@ button {
 .parents {
   margin: 6px 0 0;
   font-size: 12px;
-  color: #656d76;
+  color: var(--muted);
   word-break: break-all;
 }
 

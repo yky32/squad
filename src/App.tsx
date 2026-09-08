@@ -81,7 +81,7 @@ export default function App() {
       <div className="empty" onDragOver={(e) => e.preventDefault()}>
         <Mark size={64} />
         <h1 className="mark">Squad</h1>
-        <p className="lede">See the commit graph of a folder on this Mac.</p>
+        <p className="lede">A local commit graph. Nothing leaves this Mac.</p>
         <button type="button" className="primary" onClick={() => void pick()}>
           Open repository…
         </button>
@@ -110,6 +110,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="bar">
+        <Mark size={22} />
         <span className="bar-name">{folderName(repo.path)}</span>
         <span className="bar-count">{repo.commits.length} commits</span>
         <button type="button" className="ghost" onClick={() => void pick()}>

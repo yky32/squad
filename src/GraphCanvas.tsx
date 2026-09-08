@@ -22,6 +22,14 @@ const PAD_X = 22;
 const PAD_Y = 18;
 const R = 5;
 
+const PALETTE = ["#1c1916", "#c45c26", "#2f5d50", "#3d4a7a", "#8a3d4a", "#6b5a2e"];
+
+function authorColor(name: string) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return PALETTE[h % PALETTE.length];
+}
+
 type Props = {
   commits: Commit[];
   selected: string | null;
@@ -65,7 +73,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
     const dpr = window.devicePixelRatio || 1;
     const { w, h } = size.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#faf8f4";
     ctx.fillRect(0, 0, w, h);
 
     const { x: cx, y: cy, scale } = cam.current;
@@ -84,7 +92,7 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
       PAD_X + (maxLaneRef.current + 1) * COL * scale + 16 * scale + cx;
 
     ctx.lineWidth = Math.max(1, 1.15 * scale);
-    ctx.strokeStyle = "#d0d7de";
+    ctx.strokeStyle = "#d9d2c6";
     for (let i = first; i <= last; i++) {
       const c = list[i];
       if (!c) continue;
@@ -113,21 +121,26 @@ export default function GraphCanvas({ commits, selected, onSelect }: Props) {
       const y = PAD_Y + c.row * ROW * scale + cy;
       const on = c.id === sel;
       if (on) {
-        ctx.fillStyle = "#ddf4ff";
+        ctx.fillStyle = "#f3e6d4";
         ctx.fillRect(0, y - 16 * scale, w, 32 * scale);
       }
       ctx.beginPath();
       ctx.arc(x, y, R * scale, 0, Math.PI * 2);
-      ctx.fillStyle = on ? "#0969da" : "#1f883d";
+      ctx.fillStyle = on ? "#c45c26" : authorColor(c.author);
       ctx.fill();
+      if (on) {
+        ctx.strokeStyle = "#1c1916";
+        ctx.lineWidth = Math.max(1, 1.2 * scale);
+        ctx.stroke();
+      }
 
       ctx.textBaseline = "middle";
       ctx.font = fontMain;
-      ctx.fillStyle = on ? "#1f2328" : "#1f2328";
+      ctx.fillStyle = "#1c1916";
       const subj = c.subject.length > 72 ? `${c.subject.slice(0, 71)}…` : c.subject;
       ctx.fillText(subj || "(empty)", textX, y - 1);
       ctx.font = fontMeta;
-      ctx.fillStyle = "#656d76";
+      ctx.fillStyle = "#7a746c";
       const meta = `${c.id.slice(0, 7)}  ${c.author}`;
       ctx.fillText(meta, textX, y + 12 * scale);
     }
